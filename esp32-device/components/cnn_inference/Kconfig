@@ -1,0 +1,15 @@
+menu "CNN Inference"
+
+config CNN_MODEL_PARTITION
+    bool "Load model from flash partition instead of rodata"
+    default n
+    help
+        When enabled, the .espdl model is loaded from a dedicated OTA-style
+        flash partition labelled "model" rather than being linked as rodata.
+        Use this if you want to update the model over-the-air without
+        reflashing the entire firmware.
+
+        When disabled (default), the model binary is embedded directly into
+        the firmware image via EMBED_FILES and loaded from flash rodata.
+
+endmenu

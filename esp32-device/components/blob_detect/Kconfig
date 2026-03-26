@@ -1,0 +1,53 @@
+menu "Blob Detection"
+
+config BLOB_THRESHOLD_PCT
+    int "Foreground threshold (% of mean brightness)"
+    default 65
+    range 1 99
+    help
+        A pixel is treated as foreground (insect) if its brightness is below
+        this percentage of the image mean brightness.
+
+        threshold = mean_brightness * BLOB_THRESHOLD_PCT / 100
+
+        Lower values → only very dark pixels detected (fewer false positives,
+        may miss faint insects).
+        Higher values → more pixels detected (catches faint insects, more noise).
+
+        Scaling relative to mean makes this robust across different exposures:
+        a dark image (mean=80) gives threshold=52; a bright image (mean=200)
+        gives threshold=130 — both correctly isolate objects that are
+        significantly darker than the background.
+
+config BLOB_MIN_W
+    int "Minimum blob width (pixels)"
+    default 8
+    range 1 320
+    help
+        Blobs narrower than this are discarded as noise.
+
+config BLOB_MIN_H
+    int "Minimum blob height (pixels)"
+    default 8
+    range 1 320
+    help
+        Blobs shorter than this are discarded as noise.
+
+config BLOB_GAP_ROWS
+    int "Vertical gap tolerance (rows)"
+    default 4
+    range 0 32
+    help
+        Number of background rows that can appear inside a blob before it is
+        split into two separate blobs. Useful for insects with a lighter band
+        across their body.
+
+config BLOB_GAP_COLS
+    int "Horizontal gap tolerance (pixels)"
+    default 8
+    range 0 64
+    help
+        Number of background pixels that can appear between two dark runs on
+        the same row before they are treated as separate blobs.
+
+endmenu
